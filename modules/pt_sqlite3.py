@@ -59,7 +59,7 @@ def select_table_by_priority(conn, table, tableValue,condition):
 	for row in rows:
 		log.logger.info("Retrieving table by condition: " + stop_timer(start) + " - " + row)
 
-def custom_query(initial, selecting, table, condition=None):
+def custom_base_query(initial, selecting, table, condition=None):
 	cur = con.cursor()
 	start = start_timer()
 	if (condition = None):
@@ -68,12 +68,20 @@ def custom_query(initial, selecting, table, condition=None):
 		query = intial + " " + selecting + " " + table + condition
 	cur.execute(query)
 	rows = cur.fetchall()
+	log.logger.info("Custom base query (" + query + "): " + stop_timer(start))
+
+def user_def_query(query):
+	cur = con.cursor()
+	start = start_timer()
+	cur.execute(query)
+	rows = cur.fetchall()
+	log.logger.info("User defined query (" + query + "): " + stop_timer(start))
 
 # create database connection
 def main(sqlite_path=None):
 	if (sqlite_path = None):
-		database = pass
+		database = "database.db"
 	else:
 		database = sqlite_path
 
-	conn = create_connection(database)
+	conn = sqlite3.connect(database)
